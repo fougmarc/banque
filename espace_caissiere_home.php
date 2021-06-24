@@ -1,5 +1,7 @@
 <?php
 session_start();
+include 'fonction/connexion.php';
+$bd = bd();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,31 +42,37 @@ session_start();
         </div>
         <div class="sidebar-brand-text mx-3">ESPACE CAISSIÈRE</div>
       </a>
-
+     
       <hr class="sidebar-divider my-0">
 
       <!-- Heading -->
       <div class="sidebar-heading" style="margin:5px auto;">
         <i class="fas fa-fw fa-login"></i>
-        Mon profil
+        Mon profil <?php echo $_SESSION['idcaisse']; ?>
       </div>
+      <?php 
+        $requete = $bd->prepare("SELECT * FROM caissiere WHERE idcaisse = ? ");
+        $requete->execute(array($_SESSION['idcaisse']));
+        $donne = $requete->fetch();
+        while($donne = $requete->fetch()){
+      ?>
       <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
       <!-- Nav Item - Tables -->
       <label style="margin-left: 20px; font-weight:bold;">
-          Nom :<?php echo ' MON_NOM'; ?>
+          Nom :<?php echo $donne['nomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Prenom :<?php echo ' MON_PRENOM'; ?>
+          Prenom :<?php echo $donne['prenomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Email :<?php echo ' MON_MAIL'; ?>
+          Email :<?php echo $donne['emailcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Numero Telephone :<br> <?php echo ' MON_NUMERO'; ?>
+          Numero Telephone :<br> <?php echo $donne['numerocaisse']; ?>
       </label>
-      <label class="btn btn-success" data-toggle="modal" data-target="#motdepass">
-      Editer<span class="fa fa-edit">
-      </label>
+      <?php
+        }
+      ?>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
