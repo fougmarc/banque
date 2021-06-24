@@ -53,7 +53,7 @@
           <li><a class="nav-link scrollto active" href="#hero">Accueil</a></li>
           <li><a class="nav-link scrollto" href="#about">À propos</a></li>
           
-          <li><a class="nav-link scrollto" href="#contact">Inscription</a></li>
+          <li><a class="nav-link scrollto" href="./login.php">Connexion</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
