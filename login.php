@@ -62,8 +62,8 @@ $bd = bd();
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Accueil</a></li>
-          <li><a class="nav-link scrollto" href="#about">À propos</a></li>
+          <li><a class="nav-link scrollto active" href="index.php#hero">Accueil</a></li>
+          <li><a class="nav-link scrollto" href="index.php#about">À propos</a></li>
           
           <li><a class="nav-link scrollto" href="./login.php">Connexion</a></li>
         </ul>
