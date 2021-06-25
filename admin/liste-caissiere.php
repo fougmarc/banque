@@ -1,3 +1,8 @@
+<?php
+session_start();
+include '../fonction/connexion.php';
+$bd = bd();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -32,7 +37,7 @@
                         <li class="sidebar-title">Menu</li>
 
                         <li class="sidebar-item active ">
-                            <a href="index-1.html" class='sidebar-link'>
+                            <a href="index.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -48,10 +53,10 @@
                                     <a href="creation-caisisere.html">Creer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">Modifier un compte</a>
+                                    <a href="#">Modifier un compte</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="component-breadcrumb.html">Supprimer un compte</a>
+                                    <a href="#">Supprimer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="liste-caissiere.html">Liste des cassieres</a>
@@ -66,7 +71,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="liste-clients.html">Liste des clients</a>
+                                    <a href="liste-clients.php">Liste des Clients</a>
                                 </li>
                             </ul>
                         </li>
@@ -87,7 +92,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-8 order-md-1 order-last">
-                            <h3>Liste des Clients</h3>
+                            <h3>Liste des Caissieres</h3>
                         </div>
 
                         <div class="col-12 col-md-4 order-md-3 order-first">
@@ -108,85 +113,44 @@
                 </div>
                 <section class="section">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h6>Rechecher client</h6>
+                        <h6>Rechecher Caissiere</h6>
                         <div class="input-group">
-                            <input type="search" class="form-control rounded" placeholder="Identifiant client" aria-label="Search" aria-describedby="search-addon" />
+                            <input type="search" class="form-control rounded" placeholder="Identifiant Caissiere" aria-label="Search" aria-describedby="search-addon" />
                             <button type="button" class="btn btn-outline-primary">search</button>
                         </div>
                     </div>
                     <br/>
                     <div class="card">
+                        <div class="card-header">
+                            Simple Datatable
+                        </div>
                         <div class="card-body">
+                        <?php 
+                        $requete = $bd->prepare("SELECT * FROM caissiere ");
+                        $donne = $requete->execute();
+                        ?>
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
                                         <th>Nom</th>
+                                        <th>Prenom</th>
                                         <th>Email</th>
-                                        <th>Telephone</th>
-                                        <th>Ville</th>
+                                      
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
+                                <?php     while($donnes = $requete->fetch() ){ ?>
                                     <tr>
-                                        <td>Graiden</td>
-                                        <td>vehicula.aliquet@semconsequat.co.uk</td>
-                                        <td>076 4820 8838</td>
-                                        <td>Offenburg</td>
+                                        <td><?php echo $donnes['prenomcaisse'];?></td>
+                                        <td><?php echo $donnes['nomcaisse'];?></td>
+                                        <td><?php echo $donnes['emailcaisse'];?></td>
+                                       
+                                        
                                     </tr>
-                                    <tr>
-                                        <td>Dale</td>
-                                        <td>fringilla.euismod.enim@quam.ca</td>
-                                        <td>0500 527693</td>
-                                        <td>New Quay</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nathaniel</td>
-                                        <td>mi.Duis@diam.edu</td>
-                                        <td>(012165) 76278</td>
-                                        <td>Grumo Appula</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Darius</td>
-                                        <td>velit@nec.com</td>
-                                        <td>0309 690 7871</td>
-                                        <td>Ways</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Oleg</td>
-                                        <td>rhoncus.id@Aliquamauctorvelit.net</td>
-                                        <td>0500 441046</td>
-                                        <td>Rossignol</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kermit</td>
-                                        <td>diam.Sed.diam@anteVivamusnon.org</td>
-                                        <td>(01653) 27844</td>
-                                        <td>Patna</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jermaine</td>
-                                        <td>sodales@nuncsit.org</td>
-                                        <td>0800 528324</td>
-                                        <td>Mold</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ferdinand</td>
-                                        <td>gravida.molestie@tinciduntadipiscing.org</td>
-                                        <td>(016977) 4107</td>
-                                        <td>Marlborough</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kuame</td>
-                                        <td>Quisque.purus@mauris.org</td>
-                                        <td>(0151) 561 8896</td>
-                                        <td>Tresigallo</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Deacon</td>
-                                        <td>Duis.a.mi@sociisnatoquepenatibus.com</td>
-                                        <td>07740 599321</td>
-                                        <td>Karapınar</td>
-                                    </tr>
+                                    <?php 
+                      }
+                    ?>
                                 </tbody>
                             </table>
                         </div>

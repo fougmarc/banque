@@ -1,3 +1,8 @@
+<?php
+session_start();
+include '../fonction/connexion.php';
+$bd = bd();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -20,6 +25,7 @@
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
+          
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <a href="index-1.html" style="text-align: center">
@@ -48,13 +54,13 @@
                                     <a href="creation-caisisere.html">Creer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="#">Modifier un compte</a>
+                                    <a href="component-badge.html">Modifier un compte</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="#">Supprimer un compte</a>
+                                    <a href="component-breadcrumb.html">Supprimer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="liste-caissiere.html">Liste des cassieres</a>
+                                    <a href="liste-caissiere.php">Liste des cassieres</a>
                                 </li>
                             </ul>
                         </li>
@@ -66,7 +72,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="liste-clients.html">Liste des Clients</a>
+                                    <a href="liste-clients.php">Liste des clients</a>
                                 </li>
                             </ul>
                         </li>
@@ -86,10 +92,10 @@
             <div class="page-heading">
                 <div class="page-title">
                     <div class="row">
-                        <div class="col-12 col-md-8 order-md-1 order-last" style="text-align: center">
-                            <h4>FORMULAIRE D'INSCRIPTION - CAISSIERE </h4>
-                            <p class="text-subtitle text-muted">Veuillez saissir les Informations concernant la Caissiere</p>
+                        <div class="col-12 col-md-8 order-md-1 order-last">
+                            <h3>Liste des Clients</h3>
                         </div>
+
                         <div class="col-12 col-md-4 order-md-3 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
@@ -107,84 +113,72 @@
                     </div>
                 </div>
                 <section class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Informations personnels</h4>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <h6>Nom</h6>
-                                        <input type="text" class="form-control" id="basicInput" placeholder="Veuillez saissir le nom">
-                                    </div>
-                                    <br/>
-
-                                    <div>
-                                        <h6>Situation Matrimoniale</h6>
-                                        <fieldset class="form-group">
-                                            <select class="form-select" id="basicSelect">
-                                                        <option selected disabled>Choississez une option</option>
-                                                        <option value="1">Celibataire</option>
-                                                        <option value="2">Mariée</option>
-                                                    </select>
-                                        </fieldset>
-                                    </div>
-                                    <br/>
-                                    <div class="form-group">
-                                        <h6>Adresse Email</h6>
-                                        <input type="text" class="form-control" id="helpInputTop" placeholder="Exemple:someone@example.com">
-                                    </div>
-                                    <div class="form-group">
-                                        <h6>Telephone</h6>
-                                        <input type="text" class="form-control" id="basicInput" placeholder="Veuillez saissir le prenom">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <h6>Prenom</h6>
-                                        <input type="text" class="form-control" id="basicInput" placeholder="Veuillez saissir le prenom">
-                                    </div>
-                                    <br/>
-                                    <div class="form-group">
-                                        <h6>Date de naissance</h6>
-                                        <input type="date" class="form-control" name="anniversaire">
-                                    </div>
-                                    <br/>
-                                    <div class="form-group">
-                                        <h6>Lieu de naissance</h6>
-                                        <input type="text" class="form-control" id="basicInput" placeholder="Veuillez saissir le numero de Telephone">
-                                    </div>
-                                    <br/>
-                                    <div class="col-md-6" style="text-align: center">
-                                        <button type="button" class="btn btn-outline-success block " data-bs-toggle="modal " data-bs-target="#default ">
-                                                Enregistrer
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h6>Rechecher client</h6>
+                        <div class="input-group">
+                            <input type="search" class="form-control rounded" placeholder="Identifiant client" aria-label="Search" aria-describedby="search-addon" />
+                            <button type="button" class="btn btn-outline-primary">search</button>
                         </div>
                     </div>
+                    <br/>
+                    <?php 
+                        $requete = $bd->prepare("SELECT * FROM client LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE client.archive = 0 ");
+                        $donne = $requete->execute();
+                        ?>
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                    <th >Cni client</th>
+                                    <th >Nom et prenom</th>
+                                    <th >Date naissance</th>
+                                    <th >Sexe</th>
+                                    <th >Profession</th>
+                                    <th >Numero</th>
+                                    <th >Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php 
+                    while($donnes = $requete->fetch() ){ ?>
+                                    <tr>
+                                        <td><?php echo $donnes['cni'];?></td>
+                                        <td><?php echo $donnes['nomclient'].' '.$donnes['prenomclient'];?></td>
+                                        <td><?php echo $donnes['datenaissance'];?></td>
+                                        <td><?php echo $donnes['libsexe'];?></td>
+                                        <td><?php echo $donnes['profession'];?></td>
+                                        <td><?php echo $donnes['telephone'];?></td>
+                                        <td><?php echo $donnes['email'];?></td>
+                                    </tr>
+                                    
+                                </tbody>
+                                <?php 
+                      }
+                    ?>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
             </div>
-            </section>
 
             <footer>
-                <div class="footer clearfix mb-0 text-muted ">
-                    <div class="float-start ">
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
                         <p>2021 &copy; Mazer</p>
                     </div>
-                    <div class="float-end ">
-                        <p>Crafted with <span class="text-danger "><i class="bi bi-heart "></i></span> by <a href="http://ahmadsaugi.com ">A. Saugi</a></p>
+                    <div class="float-end">
+                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
                     </div>
                 </div>
             </footer>
         </div>
     </div>
-    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js "></script>
-    <script src="assets/js/bootstrap.bundle.min.js "></script>
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
 
-    <script src="assets/js/main.js "></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>
