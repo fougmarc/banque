@@ -2,6 +2,7 @@
 session_start();
 include '../fonction/connexion.php';
 $bd = bd();
+$id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -18,13 +19,14 @@ $bd = bd();
     <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
+          
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <a href="index.php" style="text-align: center">
@@ -49,7 +51,7 @@ $bd = bd();
                                 <span>Caissiere</span>
                             </a>
                             <ul class="submenu ">
-                                <li class="submenu-item ">
+                            <li class="submenu-item ">
                                     <a href="creation-caisisere.php">Creer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
@@ -65,7 +67,7 @@ $bd = bd();
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="liste-clients.php">Liste des Clients</a>
+                                    <a href="liste-clients.php">Liste des clients</a>
                                 </li>
                             </ul>
                         </li>
@@ -112,7 +114,7 @@ $bd = bd();
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-8 order-md-1 order-last">
-                            <h3>Liste des Caissieres</h3>
+                            <h3>Liste des Clients</h3>
                         </div>
 
                         <div class="col-12 col-md-4 order-md-3 order-first">
@@ -133,48 +135,93 @@ $bd = bd();
                 </div>
                 <section class="section">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h6>Rechecher Caissiere</h6>
+                        <h6>Rechecher client</h6>
                         <div class="input-group">
-                            <input type="search" class="form-control rounded" placeholder="Identifiant Caissiere" aria-label="Search" aria-describedby="search-addon" />
+                            <input type="search" class="form-control rounded" placeholder="Identifiant client" aria-label="Search" aria-describedby="search-addon" />
                             <button type="button" class="btn btn-outline-primary">search</button>
                         </div>
                     </div>
                     <br/>
                     <div class="card">
-                        <div class="card-header">
-                            Simple Datatable
-                        </div>
-                        <div class="card-body">
-                        <?php 
-                        $requete = $bd->prepare("SELECT * FROM caissiere WHERE archive = 0 ");
-                        $donne = $requete->execute();
-                        ?>
-                            <table class="table table-striped" id="table1">
-                                <thead>
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Prenom</th>
-                                        <th>Email</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php     while($donnes = $requete->fetch() ){ ?>
-                                    <tr>
-                                        <td><?php echo $donnes['nomcaisse'];?></td>
-                                        <td><?php echo $donnes['prenomcaisse'];?></td>
-                                        <td><?php echo $donnes['emailcaisse'];?></td>
-                                        <td><a class="btn btn-success" title="Editer" style="font-size:13px;" href="editer_cpte.php?Id_cpte=<?php echo $donnes['idcaisse'];?>" onclick="return(confirm('Etes-vous sûr de vouloir modifier cette caissiere ??? Toutes informations le concernant seront modifiées également !!!'));">Editer </a></td>
-                                        <td><a class="btn btn-danger" title="Supprimer" style="font-size:13px;" href="supprimer_cpte.php?Id_cpte=<?php echo $donnes['idcaisse'];?>" onclick="return(confirm('Etes-vous sûr de vouloir supprimer cette caissiere ??? Toutes informations le concernant seront supprimées également !!!'));">Supprimer </a></td>
-                                    </tr>
-                                    <?php 
-                      }
-                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                     <!-- DataTales Example -->
+          <?php
+            if (isset($_POST['sauvegarde'])) {
+                //verification si les données parrains saisies
+                if (!empty($_POST['nom']) AND !empty($_POST['prenom']) AND !empty($_POST['mail']) AND !empty($_POST['pswd'])) {
+                $nom = htmlspecialchars($_POST['nom']);
+                $prenom = htmlspecialchars($_POST['prenom']);                  
+                $email = htmlspecialchars($_POST['mail']);
+                $mdp = $_POST['pswd'];
+                $idcaisse = intval(htmlspecialchars($_POST['idcaisse']));
+                
+                    $modification = $bd->prepare(" UPDATE caissiere SET nomcaisse = ?, prenomcaisse = ?,emailcaisse = ?, passwordcaisse = ? WHERE idcaisse = ? ");
+                    $modification->execute(array($nom, $prenom, $email, $mdp, intval($id)));
+                    /*-----------------compte------------------*/
+                    if($modification){
+                        $flashalerte = '<div class="alert alert-success"> Modification effectuée avec succès </div>';
+                    }else{
+                        $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
+                    }
+
+                }else{
+
+                    $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
+                }
+            }
+            ?>
+          <!-- DataTales Example -->
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Modification de compte client <a href="liste-caissiere.php" class="btn btn-danger text-white" style="float:right;">Annuler </a></h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+              <form method="POST" action="" enctype="multipart/form-data">
+                <div class="modal-body">
+                <?php
+                    if (isset($flashalerte)) {
+                        echo $flashalerte;
+                        unset($flashalerte); // faire disparaitre le message d'alerte
+                    }
+
+                    $requete = $bd->prepare("SELECT * FROM caissiere WHERE idcaisse = ? ");
+                    $donne = $requete->execute(array($id));
+                
+                    while($donnes = $requete->fetch() ){ 
+                ?>
+
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Nom</label>
+                        <input type="hidden" name="idcaisse" value="<?php echo $id; ?>">
+                        <input type="text" class="form-control"  value="<?php echo $donnes['nomcaisse']; ?>" name="nom" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Prenom</label>
+                        <input type="text" class="form-control"  value="<?php echo $donnes['prenomcaisse']; ?>"  name="prenom">
+                      </div>
                     </div>
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Email</label>
+                        <input type="hidden" name="idcaisse" value="<?php echo $id; ?>">
+                        <input type="email" class="form-control"  value="<?php echo $donnes['emailcaisse']; ?>" name="mail" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Password</label>
+                        <input type="text" class="form-control"  value="<?php echo $donnes['passwordcaisse']; ?>"  name="pswd">
+                      </div>
+                    </div>
+                    <?php 
+                    }
+                    ?>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
+                    </div>
+                </form>
+              
+            </div>
+
+          </div>
 
                 </section>
             </div>
@@ -196,7 +243,19 @@ $bd = bd();
 
     <script src="assets/js/main.js"></script>
 </body>
+      <!-- Core plugin JavaScript-->
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../js/sb-admin-2.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="../js/demo/datatables-demo.js"></script>
   <!-- Bootstrap core JavaScript-->
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </html>

@@ -157,11 +157,55 @@ $id = htmlspecialchars(htmlentities($_GET['Id_clt']));
               <form method="" action="">
                 <div class="modal-body">
                 <?php 
-                    $requete = $bd->prepare("SELECT * FROM client LEFT JOIN sexe ON sexe.idsexe = client.idclient WHERE idclient = ? ");
+                    $requete = $bd->prepare("SELECT * FROM client LEFT JOIN compte ON client.idclient = compte.idclient LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE client.idclient = ? ");
                     $donne = $requete->execute(array($id));
                 
                     while($donnes = $requete->fetch() ){ 
                     ?>
+                    <center><legend>Informations compte</legend></center>
+                    <?php if($donnes['idcompte'] == NULL){ ?>
+                        <center><legend><i><<  Aucuns compte en banque assigné à l'utilisateur !!! >></i></legend></center>
+                    <?php }else{ ?>
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Numéro de compte</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['numerocpte'].''.$donnes['idcompte']; ?>" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Solde</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['soldecpte'].' FCFA'; ?>" >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Date d'ouverture</label>
+                        <input readonly type="datetime" class="form-control"  value="<?php echo $donnes['dateouverture']; ?>" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Date de fermeture</label>
+                        <input readonly type="datetime" class="form-control"  value="<?php echo $donnes['datefermeture']; ?>" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Visa d'ouverture</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['visaouverture']; ?>" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Visa de fermeture</label>
+                        <input readonly type="text" class="form-control" value="<?php echo $donnes['visafermeture']; ?>" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="form-group col-10">
+                        <label>Observations</label>
+                        <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="2" name="obscpte" placeholder="Observations sur le compte ..."><?php echo $donnes['obscpte']; ?></textarea>
+                      </div>
+                    </div>
+                    <?php } ?>
+                    <hr>
+                    <center><legend>Informations client</legend></center>
                     <div class="form-group row">
                       <div class="form-group col-4">    
                         <img src="../image/<?php echo $donnes['lienphoto']; ?>" class="rounded-circle" alt="Cinque Terre" style="width:190px;height: 160px;margin:10px auto;">

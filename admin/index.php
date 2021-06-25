@@ -213,7 +213,14 @@ $bd = bd();
                         </div>
                        
                         <div class="row">
-                          
+                        <div class="card">
+                                    <div class="card-header">
+                                        <h4>Transactions</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="charit"></div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                     <div class="col-12 col-lg-3">
@@ -264,33 +271,68 @@ $bd = bd();
                                             $requete7 = $bd->query("SELECT COUNT(*) FROM client where idsexe=2 ");
                                             $donne5 = $requete5->fetch();
                                             $donne7 = $requete7->fetch();
+
+                                            $requete8 = $bd->query("SELECT COUNT(*) FROM operation where idmodeoperation=1 ");
+                                            $requete9 = $bd->query("SELECT COUNT(*) FROM operation where idmodeoperation=2 ");
+                                            $espece = $requete8->fetch();
+                                            $cheques = $requete9->fetch();
                                             ?>
                                             
                                 <script>
                               
-      let optiProfile  = {
-	series: [<?php echo $donne5[0] ; ?>, <?php echo $donne7[0] ; ?>],
-	labels: ['Homme', 'Femme'],
-	colors: ['#435ebe','#55c6e8'],
-	chart: {
-		type: 'donut',
-		width: '100%',
-		height:'350px'
-	},
-	legend: {
-		position: 'bottom'
-	},
-	plotOptions: {
-		pie: {
-			donut: {
-				size: '30%'
-			}
-		}
-	}
-}
+                            let optiProfile  = {
+                            series: [<?php echo $donne5[0] ; ?>, <?php echo $donne7[0] ; ?>],
+                            labels: ['Homme', 'Femme'],
+                            colors: ['#435ebe','#55c6e8'],
+                            chart: {
+                                type: 'donut',
+                                width: '100%',
+                                height:'350px'
+                            },
+                            legend: {
+                                position: 'bottom'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '30%'
+                                    }
+                                }
+                            }
+                        }
 
-        var chartPrit = new ApexCharts(document.getElementById("graph"), optiProfile);
-        chartPrit.render();
+                                var chartPrit = new ApexCharts(document.getElementById("graph"), optiProfile);
+                                chartPrit.render();
+
+
+                                var optionsProfileVisit = {
+                                        annotations: {
+                                            position: 'back'
+                                        },
+                                        dataLabels: {
+                                            enabled:false
+                                        },
+                                        chart: {
+                                            type: 'bar',
+                                            height: 300
+                                        },
+                                        fill: {
+                                            opacity:1
+                                        },
+                                        plotOptions: {
+                                        },
+                                        series: [{
+                                            name: 'sales',
+                                            data: [<?php echo $espece[0] ; ?>,<?php echo $cheques[0] ; ?>]
+                                        }],
+                                        colors: '#435ebe',
+                                        xaxis: {
+                                            categories: ["espece","cheques"],
+                                        },
+                                        
+                                        }
+                                        var chartit = new ApexCharts(document.querySelector("#charit"), optionsProfileVisit);    
+                                        chartit.render();
                                 </script>
   <!-- Bootstrap core JavaScript-->
   <script src="../vendor/jquery/jquery.min.js"></script>

@@ -51,7 +51,7 @@ $db = bd();
         Mon profil
       </div>
       <?php 
-        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
+        $requete = $db->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
         $requete->execute(array($_SESSION['mail']));
 
         while($donne = $requete->fetch()){
