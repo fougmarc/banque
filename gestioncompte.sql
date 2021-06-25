@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 24 juin 2021 à 22:43
+-- Généré le : ven. 25 juin 2021 à 13:47
 -- Version du serveur :  10.4.18-MariaDB
 -- Version de PHP : 8.0.3
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `gestioncompte`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `admin`
+--
+
+CREATE TABLE `admin` (
+  `idadmin` int(11) NOT NULL,
+  `nomadmin` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `prenomadmin` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `emailadmin` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `passwordadmin` varchar(255) CHARACTER SET utf8 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `admin`
+--
+
+INSERT INTO `admin` (`idadmin`, `nomadmin`, `prenomadmin`, `emailadmin`, `passwordadmin`) VALUES
+(1, 'TRAORE', 'ZIE ABASSE', 'abasse882@gmail.com', 'admin@2021'),
+(2, 'SORO', 'FOUGNIGUE MARC', 'soro@gmail.com', 'admin@2021');
 
 -- --------------------------------------------------------
 
@@ -54,16 +76,22 @@ CREATE TABLE `caissiere` (
   `prenomcaisse` varchar(255) CHARACTER SET utf8 NOT NULL,
   `emailcaisse` varchar(255) CHARACTER SET utf8 NOT NULL,
   `passwordcaisse` varchar(255) CHARACTER SET utf8 DEFAULT 'cib2021@',
-  `numerocaisse` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+  `numerocaisse` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `archive` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `caissiere`
 --
 
-INSERT INTO `caissiere` (`idcaisse`, `nomcaisse`, `prenomcaisse`, `emailcaisse`, `passwordcaisse`, `numerocaisse`) VALUES
-(1, 'KOUADIO', 'EMMANUELLA', 'emma20@gmail.com', 'cib2021@', NULL),
-(2, 'YAO', 'MARIE-ANNE', 'marieanne02@gamil.com', 'cib2021@', NULL);
+INSERT INTO `caissiere` (`idcaisse`, `nomcaisse`, `prenomcaisse`, `emailcaisse`, `passwordcaisse`, `numerocaisse`, `archive`) VALUES
+(1, 'KOUADIO', 'EMMANUELLA', 'emma20@gmail.com', 'cib2021@', NULL, 0),
+(2, 'YAO', 'MARIE-ANNE', 'marieanne02@gamil.com', 'cib2021@', NULL, 0),
+(3, 'SANGARE', 'SANGARE', 'sangare@gmail.com', 'sang@sang', '', 0),
+(4, 'SANGARE', 'ADAMA', 'sangareadama@gmail.com', 'sang@sang', '', 0),
+(5, 'SANGARE', 'ADAMA', 'sangareadama@gmail.com', 'sang@sang', '', 0),
+(6, 'SANGARE', 'MARIAM', 'sangaremariam@gmail.com', 'sang@sang', '', 1),
+(7, 'COULIBAL', 'zejzfuizefguizer', 'sangare@gmail.com', 'ezfhzeifg', '', 1);
 
 -- --------------------------------------------------------
 
@@ -120,7 +148,7 @@ CREATE TABLE `compte` (
 --
 
 INSERT INTO `compte` (`idcompte`, `numerocpte`, `visaouverture`, `dateouverture`, `datefermeture`, `visafermeture`, `obscpte`, `soldecpte`, `idclient`, `archive`) VALUES
-(3, 'CIB-1', '', '23-06-2021 04:49:19', '', '', 'compte actif', 0, 7, 0),
+(3, 'CIB-1', '', '23-06-2021 04:49:19', '', '', 'compte actif', 10000, 7, 0),
 (4, 'CIB-2', NULL, '23-06-2021 05:04:56', NULL, NULL, 'Compte actif', 0, 8, 0);
 
 -- --------------------------------------------------------
@@ -134,6 +162,14 @@ CREATE TABLE `modeoperation` (
   `libmodeoperation` varchar(255) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Déchargement des données de la table `modeoperation`
+--
+
+INSERT INTO `modeoperation` (`idmodeoperation`, `libmodeoperation`) VALUES
+(1, 'Espèce'),
+(2, 'Chèque');
+
 -- --------------------------------------------------------
 
 --
@@ -143,13 +179,24 @@ CREATE TABLE `modeoperation` (
 CREATE TABLE `operation` (
   `idopteration` int(11) NOT NULL,
   `numerooperation` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `dateoperation` date NOT NULL,
-  `visaoperation` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `numerocpte` int(11) NOT NULL,
+  `dateoperation` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `visaoperation` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `numerocpte` varchar(255) CHARACTER SET utf8 NOT NULL,
   `idtypeoperation` int(11) NOT NULL,
   `idmodeoperation` int(11) NOT NULL,
-  `idagence` int(11) NOT NULL
+  `idagence` int(11) NOT NULL,
+  `issueoperation` int(1) NOT NULL DEFAULT 0,
+  `montantoperation` int(20) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `operation`
+--
+
+INSERT INTO `operation` (`idopteration`, `numerooperation`, `dateoperation`, `visaoperation`, `numerocpte`, `idtypeoperation`, `idmodeoperation`, `idagence`, `issueoperation`, `montantoperation`) VALUES
+(1, 'OPE-1', '23-06-2021 04:49:30', NULL, 'CIB-1', 1, 1, 1, 1, 10000),
+(2, 'OPE-2', '23-06-2021 04:49:19', NULL, 'CIB-2', 2, 1, 1, 2, 2000),
+(3, 'OPE-3', '23-06-2021 04:59:00', NULL, 'CIB-1', 1, 1, 1, 0, 5000);
 
 -- --------------------------------------------------------
 
@@ -193,6 +240,12 @@ INSERT INTO `typecompte` (`idtypeoperation`, `libtypeoperation`) VALUES
 --
 -- Index pour les tables déchargées
 --
+
+--
+-- Index pour la table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`idadmin`);
 
 --
 -- Index pour la table `agence`
@@ -247,6 +300,12 @@ ALTER TABLE `typecompte`
 --
 
 --
+-- AUTO_INCREMENT pour la table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `idadmin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT pour la table `agence`
 --
 ALTER TABLE `agence`
@@ -256,7 +315,7 @@ ALTER TABLE `agence`
 -- AUTO_INCREMENT pour la table `caissiere`
 --
 ALTER TABLE `caissiere`
-  MODIFY `idcaisse` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idcaisse` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `client`
@@ -274,13 +333,13 @@ ALTER TABLE `compte`
 -- AUTO_INCREMENT pour la table `modeoperation`
 --
 ALTER TABLE `modeoperation`
-  MODIFY `idmodeoperation` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idmodeoperation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `operation`
 --
 ALTER TABLE `operation`
-  MODIFY `idopteration` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idopteration` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `sexe`
