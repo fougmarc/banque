@@ -1,6 +1,13 @@
-Thanks for downloading this template!
+Options de connexion:
 
-Template Name: Bootslander
-Template URL: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/
-Author: BootstrapMade.com
-License: https://bootstrapmade.com/license/
+Client: email + numero-Telephone
+    email: abasse882@gmail.com
+    numero-Telephone: 0505560018
+
+Caissiere: email + mot-de-passe
+    email: emma20@gmail.com
+    mot-de-passe: cib2021@
+
+Administrateur: email + mot-de-passe
+    email: abasse882@gmail.com
+    mot-de-passe: admin@2021
