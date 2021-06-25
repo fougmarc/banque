@@ -83,13 +83,13 @@ $bd = bd();
         if($_POST['nbcompte'] != "" AND $_POST['pswd'] != ""){
           $mail = htmlspecialchars($_POST['nbcompte']);
           $password = htmlspecialchars($_POST['pswd']);
-          $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? AND passwordcaisse = ? ");
+          $requete = $bd->prepare("SELECT * FROM admin WHERE emailadmin = ? AND passwordadmin = ? ");
           $requete->execute(array($mail, $password));
 
           if($requete->fetch()){
             $_SESSION['mail'] = $mail;
-            $_SESSION['idcaisse'] = $requete->fetch()['idcaisse'];
-            header('Location:admin/index.html');
+            $_SESSION['idcaisse'] = $requete->fetch()['idadmin'];
+            header('Location:admin/index.php');
           }else{
             $flashalerte = '<div class="alert alert-danger"> Connexion échouée !!! verifiez le password ou le email.</div>';
           }

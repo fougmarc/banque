@@ -118,56 +118,6 @@ $id = htmlspecialchars(htmlentities($_GET['Id_clt']));
             
 <!-- -->
 
-<!-- CONFIRMATION MODIFICATION PASSWORD -->
-<div class="modal fade" id="motdepass" tabindex="-1" role="dialog" aria-labelledby="confirmeModal" raia-hidden="true" >#confirmereinitialeparrain
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Motifier mon profil</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        <form method="POST" action="">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Nom</label>
-                  <input type="hidden" name="id" value="<?php echo 1; ?>" />
-                  <input type="text" readonly value="<?php echo 'MON_NOM'; ?>" class="form-control" name="nom" >
-                </div>
-                <div class="form-group">
-                  <label>Prenom</label>
-                  <input type="text" readonly value="<?php echo 'MON_PRENOM'; ?>" class="form-control" name="prenom" >
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" class="form-control" name="email" value="<?php echo 'MON_MAIL'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Numero telephone</label>
-                  <input type="text" class="form-control" name="numero" value="<?php echo 'MON_NUMERO'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="text" class="form-control" name="password" value="<?php echo 'MON_PASSWORD'; ?>" >
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
-              </div>
-          </form>
-        </div>
-      </div>        
-    </div>
-						<!-- CONFIRMATION MODIFICATION PASSWORD -->
-
-
-<?php
- /* TRAITEMENT */
-
-?>
-
 
 <!-- -->
 

@@ -36,7 +36,7 @@ $bd = bd();
             <div class="sidebar-wrapper active">
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
-                        <a href="index-1.html">
+                        <a href="index.php">
                             <h4>
                                 <center> IVOIRE FINANCE BANQUE </center>
                             </h4>
@@ -48,7 +48,7 @@ $bd = bd();
                         <li class="sidebar-title">Menu</li>
 
                         <li class="sidebar-item active ">
-                            <a href="index-1.html" class='sidebar-link'>
+                            <a href="index.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -62,12 +62,6 @@ $bd = bd();
                             <ul class="submenu ">
                                 <li class="submenu-item ">
                                     <a href="creation-caisisere.php">Creer un compte</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="#">Modifier un compte</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="#">Supprimer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="liste-caissiere.php">Liste des cassieres</a>
@@ -86,12 +80,37 @@ $bd = bd();
                                 </li>
                             </ul>
                         </li>
+                        <li class="sidebar-item active ">
+                            <a href="#" class='sidebar-link bg-danger'  data-toggle="modal" data-target="#logoutModal">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Se deconnecter</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
             </div>
         </div>
+         <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ATTENTION !!!</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Êtes vous sûre de vouloir vous deconnecté ???.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Non</button>
+          <a class="btn btn-primary" href="admindeconnexion.php">Oui, Biensûr</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Bootstrap core JavaScript-->
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -273,6 +292,8 @@ $bd = bd();
         var chartPrit = new ApexCharts(document.getElementById("graph"), optiProfile);
         chartPrit.render();
                                 </script>
-
+  <!-- Bootstrap core JavaScript-->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </body>

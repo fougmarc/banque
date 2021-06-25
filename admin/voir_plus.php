@@ -2,6 +2,7 @@
 session_start();
 include '../fonction/connexion.php';
 $bd = bd();
+$id = htmlspecialchars(htmlentities($_GET['Id_clt']));
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -18,13 +19,14 @@ $bd = bd();
     <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
+          
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <a href="index.php" style="text-align: center">
@@ -50,7 +52,13 @@ $bd = bd();
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="creation-caisisere.php">Creer un compte</a>
+                                    <a href="creation-caisisere.html">Creer un compte</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-badge.html">Modifier un compte</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-breadcrumb.html">Supprimer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="liste-caissiere.php">Liste des cassieres</a>
@@ -65,7 +73,7 @@ $bd = bd();
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="liste-clients.php">Liste des Clients</a>
+                                    <a href="liste-clients.php">Liste des clients</a>
                                 </li>
                             </ul>
                         </li>
@@ -112,7 +120,7 @@ $bd = bd();
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-8 order-md-1 order-last">
-                            <h3>Liste des Caissieres</h3>
+                            <h3>Liste des Clients</h3>
                         </div>
 
                         <div class="col-12 col-md-4 order-md-3 order-first">
@@ -133,47 +141,85 @@ $bd = bd();
                 </div>
                 <section class="section">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h6>Rechecher Caissiere</h6>
+                        <h6>Rechecher client</h6>
                         <div class="input-group">
-                            <input type="search" class="form-control rounded" placeholder="Identifiant Caissiere" aria-label="Search" aria-describedby="search-addon" />
+                            <input type="search" class="form-control rounded" placeholder="Identifiant client" aria-label="Search" aria-describedby="search-addon" />
                             <button type="button" class="btn btn-outline-primary">search</button>
                         </div>
                     </div>
                     <br/>
                     <div class="card">
-                        <div class="card-header">
-                            Simple Datatable
-                        </div>
-                        <div class="card-body">
-                        <?php 
-                        $requete = $bd->prepare("SELECT * FROM caissiere WHERE archive = 0 ");
-                        $donne = $requete->execute();
-                        ?>
-                            <table class="table table-striped" id="table1">
-                                <thead>
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Prenom</th>
-                                        <th>Email</th>
-                                      
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php     while($donnes = $requete->fetch() ){ ?>
-                                    <tr>
-                                        <td><?php echo $donnes['nomcaisse'];?></td>
-                                        <td><?php echo $donnes['prenomcaisse'];?></td>
-                                        <td><?php echo $donnes['emailcaisse'];?></td>
-                                        <td><a class="btn btn-danger" title="Supprimer" style="font-size:13px;" href="supprimer_cpte.php?Id_cpte=<?php echo $donnes['idcaisse'];?>" onclick="return(confirm('Etes-vous sûr de vouloir supprimer ce client ??? Toutes informations le concernant seront supprimées également !!!'));">Supprimer </a></td>
-                                    </tr>
-                                    <?php 
-                      }
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Mon compte <a href="liste-clients.php" class="btn btn-danger text-white" style="float:right;">Retour </a></h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+              <form method="" action="">
+                <div class="modal-body">
+                <?php 
+                    $requete = $bd->prepare("SELECT * FROM client LEFT JOIN sexe ON sexe.idsexe = client.idclient WHERE idclient = ? ");
+                    $donne = $requete->execute(array($id));
+                
+                    while($donnes = $requete->fetch() ){ 
                     ?>
-                                </tbody>
-                            </table>
+                    <div class="form-group row">
+                      <div class="form-group col-4">    
+                        <img src="../image/<?php echo $donnes['lienphoto']; ?>" class="rounded-circle" alt="Cinque Terre" style="width:190px;height: 160px;margin:10px auto;">
+                      </div>
+                      <div class="form-group col-8">
+                        <div class="form-group row">
+                            <label>Nom</label>
+                            <input readonly type="text" class="form-control"  value="<?php echo $donnes['nomclient']; ?>" >
+                        </div>
+                        <div class="form-group row">
+                            <label>Prenom</label>
+                            <input readonly type="text" class="form-control"  value="<?php echo $donnes['prenomclient']; ?>" >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="form-group col-4">
+                        <label>Date de naissance</label>
+                        <input readonly type="date" class="form-control"  value="<?php echo $donnes['datenaissance']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Email</label>
+                        <input readonly type="email" class="form-control"  value="<?php echo $donnes['email']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Cni</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['cni']; ?>" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="form-group col-4">
+                        <label>Sexe</label>
+                        <input readonly type="text" class="form-control" value="<?php echo $donnes['libsexe']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Numero telephone</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['telephone']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Signature</label>
+                        <input readonly type="text" class="form-control" value="<?php echo $donnes['liensignature']; ?>" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-group col-6">
+                            <label>Profession</label>
+                            <input readonly type="text" class="form-control" value="<?php echo $donnes['profession'];?>" name="profession" placeholder="Ingenieur, Mécanicien, ..."  >
                         </div>
                     </div>
+                    <?php 
+                    }
+                    ?>
+                </form>
+              
+              </div>
+            </div>
+            </div>
 
                 </section>
             </div>
@@ -195,7 +241,19 @@ $bd = bd();
 
     <script src="assets/js/main.js"></script>
 </body>
+      <!-- Core plugin JavaScript-->
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="../js/sb-admin-2.min.js"></script>
+  <!-- Page level plugins -->
+  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="../js/demo/datatables-demo.js"></script>
   <!-- Bootstrap core JavaScript-->
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </html>

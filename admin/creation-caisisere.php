@@ -28,7 +28,7 @@ $bd = bd();
             <div class="sidebar-wrapper active">
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
-                        <a href="index-1.html" style="text-align: center">
+                        <a href="index.php" style="text-align: center">
                             <h4>IVOIRE FINANCE BANQUE </h4>
                         </a>
                     </div>
@@ -38,7 +38,7 @@ $bd = bd();
                         <li class="sidebar-title">Menu</li>
 
                         <li class="sidebar-item active ">
-                            <a href="index-1.html" class='sidebar-link'>
+                            <a href="index.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -52,12 +52,6 @@ $bd = bd();
                             <ul class="submenu ">
                                 <li class="submenu-item ">
                                     <a href="creation-caisisere.php">Creer un compte</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="#">Modifier un compte</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="#">Supprimer un compte</a>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="liste-caissiere.php">Liste des cassieres</a>
@@ -76,12 +70,37 @@ $bd = bd();
                                 </li>
                             </ul>
                         </li>
+                        <li class="sidebar-item active ">
+                            <a href="#" class='sidebar-link bg-danger'  data-toggle="modal" data-target="#logoutModal">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Se deconnecter</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
             </div>
         </div>
+     <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ATTENTION !!!</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Êtes vous sûre de vouloir vous deconnecté ???.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Non</button>
+          <a class="btn btn-primary" href="admindeconnexion.php">Oui, Biensûr</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Bootstrap core JavaScript-->
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -100,7 +119,7 @@ $bd = bd();
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item">
-                                        <a href="index-1.html">
+                                        <a href="index.php">
                                             <p>Dashboard</p>
                                         </a>
                                     </li>
@@ -112,6 +131,30 @@ $bd = bd();
                         </div>
                     </div>
                 </div>
+                <?php
+                     if(isset($_POST['enregistrer'])){
+                            if (!empty($_POST['nom']) AND !empty($_POST['prenom']) AND !empty($_POST['mail']) AND !empty($_POST['pswd'])) {
+                            $nom = htmlspecialchars($_POST['nom']);
+                            $prenom = htmlspecialchars($_POST['prenom']);                  
+                            $email = htmlspecialchars($_POST['mail']);
+                            $mdp = $_POST['pswd'];
+                            $req = $bd->prepare(" INSERT INTO  caissiere(nomcaisse,prenomcaisse,emailcaisse,passwordcaisse,numerocaisse) VALUES(:nomcaisse,:prenomcaisse,:emailcaisse,:passwordcaisse,'') ");
+                            $req->execute(array(
+                                'nomcaisse'=>$nom,
+                                'prenomcaisse'=>$prenom,
+                                'emailcaisse'=>$email,
+                                'passwordcaisse'=>$mdp));
+                            /*-----------------compte------------------*/
+                            if($req){
+                                $flashalerte = '<div class="alert alert-success"> Création de la caissière '.$nom.' '.$prenom.' terminée.</div>';
+                            }else{
+                                $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
+                            }
+                        }else{
+                            $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
+                        }
+                    }
+                ?>
                 <section class="section">
                     <div class="card">
                         <div class="card-header">
@@ -119,6 +162,12 @@ $bd = bd();
                         </div>
                         <form action="" method="post">
                         <div class="card-body">
+                        <?php
+                            if (isset($flashalerte)) {
+                                echo $flashalerte;
+                                unset($flashalerte); // faire disparaitre le message d'alerte
+                            }
+                        ?>
                             <div class="row">
                                 <div class="col-md-6">
                                 
@@ -156,21 +205,7 @@ $bd = bd();
                     </div>
             </div>
             </section>
-            <?php
-                     if(isset($_POST['enregistrer'])){
-                        $nom = htmlspecialchars($_POST['nom']);
-                        $prenom = htmlspecialchars($_POST['prenom']);                  
-                        $email = htmlspecialchars($_POST['mail']);
-                        $mdp = $_POST['pswd'];
-                        $req = $bd->prepare(" INSERT INTO  caissiere(nomcaisse,prenomcaisse,	emailcaisse,passwordcaisse,numerocaisse) VALUES(:nomcaisse,:prenomcaisse,:emailcaisse,:passwordcaisse,'') ");
-                        $req->execute(array(
-                            'nomcaisse'=>$nom,
-                            'prenomcaisse'=>$prenom,
-                            'emailcaisse'=>$email,
-                            'passwordcaisse'=>$mdp));
-                        /*-----------------compte------------------*/
-                     }
-            ?>
+            
             <footer>
                 <div class="footer clearfix mb-0 text-muted ">
                     <div class="float-start ">
@@ -188,5 +223,7 @@ $bd = bd();
 
     <script src="assets/js/main.js "></script>
 </body>
-
+  <!-- Bootstrap core JavaScript-->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </html>
