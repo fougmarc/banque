@@ -94,7 +94,7 @@ $bd = bd();
             $flashalerte = '<div class="alert alert-danger"> Connexion échouée !!! verifiez le password ou le email.</div>';
           }
         }
-    }elseif($_POST['types'] == "2"){
+    }else if($_POST['types'] == "2"){
         if($_POST['nbcompte'] != "" AND $_POST['pswd'] != ""){
           $mail = htmlspecialchars($_POST['nbcompte']);
           $password = htmlspecialchars($_POST['pswd']);
@@ -109,17 +109,17 @@ $bd = bd();
             $flashalerte = '<div class="alert alert-danger"> Connexion échouée !!! verifiez le password ou le email.</div>';
           }
         }
-    }elseif($_POST['types'] == "1"){
+    }else if($_POST['types'] == "1"){
 
         if($_POST['nbcompte'] != "" AND $_POST['pswd'] != ""){
           $mail = htmlspecialchars($_POST['nbcompte']);
           $password = htmlspecialchars($_POST['pswd']);
-          $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? AND passwordcaisse = ? ");
+          $requete = $bd->prepare("SELECT * FROM client WHERE email = ? AND telephone = ? ");
           $requete->execute(array($mail, $password));
           if($requete->fetch()){
             $_SESSION['mail'] = $mail;
-            $_SESSION['idcaisse'] = $requete->fetch()['idcaisse'];
-            header('Location:espace_client_home.php');
+            $_SESSION['idclient'] = $requete->fetch()['idclient'];
+            header('Location:espace_client_comptes.php');
           }else{
             $flashalerte = '<div class="alert alert-danger"> Connexion échouée !!! verifiez le password ou le email.</div>';
           }

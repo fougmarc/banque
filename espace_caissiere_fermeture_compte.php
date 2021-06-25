@@ -50,23 +50,29 @@ $bd = bd();
         <i class="fas fa-fw fa-login"></i>
         Mon profil
       </div>
+      <?php 
+        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
+        $requete->execute(array($_SESSION['mail']));
+
+        while($donne = $requete->fetch()){
+      ?>
       <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
       <!-- Nav Item - Tables -->
       <label style="margin-left: 20px; font-weight:bold;">
-          Nom :<?php echo ' MON_NOM'; ?>
+          Nom :<?php echo $donne['nomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Prenom :<?php echo ' MON_PRENOM'; ?>
+          Prenom :<?php echo $donne['prenomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Email :<?php echo ' MON_MAIL'; ?>
+          Email :<?php echo $donne['emailcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Numero Telephone :<br> <?php echo ' MON_NUMERO'; ?>
+          Numero Telephone :<br> <?php echo $donne['numerocaisse']; ?>
       </label>
-      <label class="btn btn-success" data-toggle="modal" data-target="#motdepass">
-      Editer<span class="fa fa-edit">
-      </label>
+      <?php
+        }
+      ?>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
@@ -84,7 +90,7 @@ $bd = bd();
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-dark bg-dark text-light topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -243,14 +249,14 @@ $bd = bd();
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                   <?php 
-                    $requete = $bd->prepare("SELECT * FROM compte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN agence ON agence.idagence = client.id WHERE compte.archive = 0");
+                    $requete = $bd->prepare("SELECT * FROM compte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE compte.archive = 0");
                     $donne = $requete->execute();
                   ?>
                     <tr>
                       <th style="font-size:12px;">Cni client</th>
                       <th style="font-size:12px;">Numéro compte</th>
-                      <th style="font-size:12px;">Agence</th>
                       <th style="font-size:12px;width:200px;">Nom et prenom</th>
+                      <th style="font-size:12px;">Genre</th>
                       <th style="font-size:12px;">Date ouverture</th>
                       <th style="font-size:12px;">Solde</th>
                       <th style="font-size:12px;">Numero</th>
@@ -265,8 +271,8 @@ $bd = bd();
                     <tr>
                       <td style="font-size:13px;"><?php echo $donnes['cni'];?></td>
                       <td style="font-size:13px;"><?php echo $donnes['numerocpte'].''.$donnes['idcompte'];?></td>
-                      <td style="font-size:13px;"><?php echo $donnes['libagence'];?></td>
                       <td style="font-size:13px;width:150px;"><?php echo $donnes['nomclient'].' '.$donnes['prenomclient'];?></td>
+                      <td style="font-size:13px;"><?php echo $donnes['libsexe'];?></td>
                       <td style="font-size:13px;"><?php echo $donnes['dateouverture'];?></td>
                       <td style="font-size:13px;"><?php echo $donnes['soldecpte'].'F';?></td>
                       <td style="font-size:13px;"><?php echo $donnes['telephone'];?></td>
@@ -289,7 +295,7 @@ $bd = bd();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-dark text-light">
+      <footer class="sticky-footer text-light" style="background:rgb(60,36,139);">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Gestion comptes banques 2021</span>

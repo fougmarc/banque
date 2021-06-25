@@ -85,7 +85,7 @@ $id = htmlspecialchars(htmlentities($_GET['Id_clt']));
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-dark bg-dark text-light topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -261,7 +261,7 @@ $id = htmlspecialchars(htmlentities($_GET['Id_clt']));
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-dark text-light">
+      <footer class="sticky-footer text-light" style="background:rgb(60,36,139);">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Gestion comptes banques 2021</span>

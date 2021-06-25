@@ -45,28 +45,34 @@ $bd = bd();
 
       <hr class="sidebar-divider my-0">
 
-      <!-- Heading -->
-      <div class="sidebar-heading" style="margin:5px auto;">
+     <!-- Heading -->
+     <div class="sidebar-heading" style="margin:5px auto;">
         <i class="fas fa-fw fa-login"></i>
         Mon profil
       </div>
+      <?php 
+        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
+        $requete->execute(array($_SESSION['mail']));
+
+        while($donne = $requete->fetch()){
+      ?>
       <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
       <!-- Nav Item - Tables -->
       <label style="margin-left: 20px; font-weight:bold;">
-          Nom :<?php echo ' MON_NOM'; ?>
+          Nom :<?php echo $donne['nomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Prenom :<?php echo ' MON_PRENOM'; ?>
+          Prenom :<?php echo $donne['prenomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Email :<?php echo ' MON_MAIL'; ?>
+          Email :<?php echo $donne['emailcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Numero Telephone :<br> <?php echo ' MON_NUMERO'; ?>
+          Numero Telephone :<br> <?php echo $donne['numerocaisse']; ?>
       </label>
-      <label class="btn btn-success" data-toggle="modal" data-target="#motdepass">
-        Editer<span class="fa fa-edit">
-      </label>
+      <?php
+        }
+      ?>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
@@ -84,7 +90,7 @@ $bd = bd();
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-dark bg-dark text-light topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -236,7 +242,7 @@ $bd = bd();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-dark text-light">
+      <footer class="sticky-footer text-light" style="background:rgb(60,36,139);">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Gestion comptes banques 2021</span>

@@ -48,12 +48,12 @@ $bd = bd();
       <!-- Heading -->
       <div class="sidebar-heading" style="margin:5px auto;">
         <i class="fas fa-fw fa-login"></i>
-        Mon profil <?php echo $_SESSION['idcaisse']; ?>
+        Mon profil
       </div>
       <?php 
-        $requete = $bd->prepare("SELECT * FROM caissiere WHERE idcaisse = ? ");
-        $requete->execute(array($_SESSION['idcaisse']));
-        $donne = $requete->fetch();
+        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
+        $requete->execute(array($_SESSION['mail']));
+
         while($donne = $requete->fetch()){
       ?>
       <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
@@ -90,7 +90,7 @@ $bd = bd();
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-dark bg-dark text-light topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -208,7 +208,7 @@ $bd = bd();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-dark text-light">
+      <footer class="sticky-footer text-light" style="background:rgb(60,36,139);">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Gestion comptes banques 2021</span>

@@ -2,6 +2,7 @@
 session_start();
 include 'fonction/connexion.php';
 $bd = bd();
+$id = htmlspecialchars(htmlentities($_GET['Id_etu']));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +100,7 @@ $bd = bd();
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
-<div class="topbar-divider d-none d-sm-block"></div>
+          <div class="topbar-divider d-none d-sm-block"></div>
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
@@ -123,61 +124,46 @@ $bd = bd();
             
 <!-- -->
 
-<!-- CONFIRMATION MODIFICATION PASSWORD -->
-<div class="modal fade" id="motdepass" tabindex="-1" role="dialog" aria-labelledby="confirmeModal" raia-hidden="true" >#confirmereinitialeparrain
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Motifier mon profil</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        <form method="POST" action="">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Nom</label>
-                  <input type="hidden" name="id" value="<?php echo 1; ?>" />
-                  <input type="text" readonly value="<?php echo 'MON_NOM'; ?>" class="form-control" name="nom" >
-                </div>
-                <div class="form-group">
-                  <label>Prenom</label>
-                  <input type="text" readonly value="<?php echo 'MON_PRENOM'; ?>" class="form-control" name="prenom" >
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" class="form-control" name="email" value="<?php echo 'MON_MAIL'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Numero telephone</label>
-                  <input type="text" class="form-control" name="numero" value="<?php echo 'MON_NUMERO'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="text" class="form-control" name="password" value="<?php echo 'MON_PASSWORD'; ?>" >
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
-              </div>
-          </form>
-        </div>
-      </div>        
-    </div>
-						<!-- CONFIRMATION MODIFICATION PASSWORD -->
-
-
-<?php
- /* TRAITEMENT */
-
-?>
-
-
 <!-- -->
 
         <!-- End of Topbar -->
 
+        <?php
+                if (isset($_POST['sauvegarde'])) {
+                  //verification si les données parrains saisies
+                  if (!empty($_POST['soldecpte']) AND !empty($_POST['idopteration'])) {
+                    
+                    $soldecpte = htmlspecialchars($_POST['soldecpte']);
+                    $idopteration = htmlspecialchars($_POST['idopteration']);
+                    $idcompte = htmlspecialchars($_POST['idcompte']);
+
+                            
+                    $requete = $bd->prepare("UPDATE operation SET issueoperation = 1 WHERE idopteration  = ? ");
+                    $donne = $requete->execute(array($idopteration));
+
+                    $requete = $bd->prepare("UPDATE compte SET soldecpte = ? WHERE idcompte  = ? ");
+                    $donne = $requete->execute(array($soldecpte, $idcompte));
+
+                    echo '<script>location.href="http://localhost/Projet_php/banque/espace_caissiere_liste_transaction.php"</script>';
+
+                    }
+                }elseif(isset($_POST['annuler'])) {
+                    //verification si les données parrains saisies
+                    if (!empty($_POST['soldecpte']) AND !empty($_POST['idopteration'])) {
+                      
+                      $soldecpte = htmlspecialchars($_POST['soldecpte']);
+                      $idopteration = htmlspecialchars($_POST['idopteration']);
+                      
+                      $requete = $bd->prepare("UPDATE operation SET issueoperation = 2 WHERE idopteration  = ? ");
+                      $donne = $requete->execute(array($id));
+
+                     
+                      echo '<script>location.href="http://localhost/Projet_php/banque/espace_caissiere_liste_transaction.php"</script>';
+  
+                      }
+                  }
+                ?>
+                
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
@@ -187,47 +173,90 @@ $bd = bd();
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Liste des comptes <a href="espace_caissiere_home.php" class="btn btn-danger text-white" style="float:right;">Retour </a></h6>
+              <h6 class="m-0 font-weight-bold text-primary">Liste des transactions <a href="espace_caissiere_home.php" class="btn btn-danger text-white" style="float:right;">Retour </a></h6>
             </div>
+
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                  <?php 
-                    $requete = $bd->prepare("SELECT * FROM compte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE compte.archive = 0");
-                    $donne = $requete->execute();
-                  ?>
-                    <tr>
-                      <th style="font-size:12px;">Cni client</th>
-                      <th style="font-size:12px;">Numéro compte</th>
-                      <th style="font-size:12px;width:200px;">Nom et prenom</th>
-                      <th style="font-size:12px;">Date ouverture</th>
-                      <th style="font-size:12px;">Solde</th>
-                      <th style="font-size:12px;">Numero</th>
-                      <th style="font-size:12px;">Email</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  
+                <?php 
+                    $requete = $bd->prepare("SELECT * FROM operation LEFT JOIN compte ON operation.numerocpte = compte.numerocpte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN agence ON operation.idagence = agence.idagence LEFT JOIN modeoperation ON operation.idmodeoperation  = modeoperation.idmodeoperation  LEFT JOIN typecompte ON typecompte.idtypeoperation = operation.idtypeoperation LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE operation.idopteration = ?");
+                    $requete->execute(array($id));
+                ?>
+                
+                <form method="POST" action="">
+                <div class="modal-body">
+                <?php
+                    
+                    while($donnes = $requete->fetch() ){ 
+                ?>
+                    <center><legend>Informations compte</legend></center>
+                    <div class="form-group row">
+                      <div class="form-group col-4">
+                        <label>Numéro opération</label>
+                        <input type="hidden" name="idopteration" value="<?php echo $id; ?>">
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['numerooperation'].''.$donnes['idopteration']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Numéro de compte</label>
+                        <input type="hidden" name="idcompte" value="<?php echo $donnes['idcompte']; ?>">
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['numerocpte'].''.$donnes['idcompte']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Solde</label>
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['soldecpte'].' FCFA'; ?>" >
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="form-group col-4">
+                        <label>Date d'opération</label>
+                        <input readonly type="datetime" class="form-control" name="dateoperation" value="<?php echo $donnes['dateoperation']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Type opération</label>
+                        <input readonly type="datetime" class="form-control" name="libtypeoperation" value="<?php echo $donnes['libtypeoperation']; ?>" >
+                      </div>
+                      <div class="form-group col-4">
+                        <label>Mode opération</label>
+                        <input readonly type="datetime" class="form-control" name="libmodeoperation" value="<?php echo $donnes['libmodeoperation']; ?>" >
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="form-group col-6">
+                        <label>Nouveau solde</label>
+                        <?php 
+                            if($donnes['libtypeoperation'] == "Dépôt"){
+                             $nouveau = intval($donnes['soldecpte']) + intval($donnes['montantoperation']);
+                            }else{
+                                $nouveau = intval($donnes['soldecpte']) - intval($donnes['montantoperation']);
+                            }
+                        ?>
+                        <input readonly type="text" class="form-control" value="<?php echo $nouveau.' FCFA'; ?>" >
+                        <input type="hidden" class="form-control" name="soldecpte" value="<?php echo $nouveau; ?>" >
+                      </div>
+                      <div class="form-group col-6">
+                        <label>Transaction ??</label>
+                        <input readonly type="text" class="form-control" name="transaction" value="<?php if($nouveau < 0){echo "Transaction Impossible"; }else{echo "Transaction Possible"; } ?>" >
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <?php if($nouveau < 0){?>
+                        <button type="submit" class="btn btn-danger" name="annuler">Annuler</button>
+                      <?php  }else{?>
+                        <button type="submit" class="btn btn-primary" name="sauvegarde">Valider</button>
+                       <?php  } ?>
+                    
+                    </div>
+                    <hr>
+
+                    <hr>
+                    
                     <?php 
-                      while($donnes = $requete->fetch() ){ ?>
-                    <tr>
-                      <td style="font-size:13px;"><?php echo $donnes['cni'];?></td>
-                      <td style="font-size:12px;"><?php echo $donnes['numerocpte'].''.$donnes['idcompte'];?></td>
-                      <td style="font-size:12px;width:200px;"><?php echo $donnes['nomclient'].' '.$donnes['prenomclient'];?></td>
-                      <td style="font-size:12px;"><?php echo $donnes['dateouverture'];?></td>
-                      <td style="font-size:12px;"><?php echo $donnes['soldecpte'].'F';?></td>
-                      <td style="font-size:13px;"><?php echo $donnes['telephone'];?></td>
-                      <td style="font-size:13px;"><?php echo $donnes['email'];?></td>
-                      <td><a class="btn btn-primary" title="Voir plus" style="font-size:13px;" href="voir_compte.php?Id_cpte=<?php echo $donnes['idcompte'];?>">Détails </a></td>
-                      
-                    </tr>
-                    <?php
-                     }
+                    }
                     ?>
-                  </tbody>
-                </table>
+                </form>
+              </div>
+
               </div>
             </div>
           </div>
@@ -278,7 +307,6 @@ $bd = bd();
     </div>
   </div>
 
-  <!--------------------->
   <!-- Bootstrap core JavaScript-->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

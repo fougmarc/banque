@@ -1,5 +1,7 @@
 <?php
 session_start();
+include 'fonction/connexion.php';
+$bd = bd();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,23 +50,29 @@ session_start();
         <i class="fas fa-fw fa-login"></i>
         Mon profil
       </div>
+      <?php 
+        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
+        $requete->execute(array($_SESSION['mail']));
+
+        while($donne = $requete->fetch()){
+      ?>
       <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
       <!-- Nav Item - Tables -->
       <label style="margin-left: 20px; font-weight:bold;">
-          Nom :<?php echo ' MON_NOM'; ?>
+          Nom :<?php echo $donne['nomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Prenom :<?php echo ' MON_PRENOM'; ?>
+          Prenom :<?php echo $donne['prenomcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Email :<?php echo ' MON_MAIL'; ?>
+          Email :<?php echo $donne['emailcaisse']; ?>
       </label>
       <label style="margin-left: 20px; font-weight:bold">
-          Numero Telephone :<br> <?php echo ' MON_NUMERO'; ?>
+          Numero Telephone :<br> <?php echo $donne['numerocaisse']; ?>
       </label>
-      <label class="btn btn-success" data-toggle="modal" data-target="#motdepass">
-        Editer<span class="fa fa-edit">
-      </label>
+      <?php
+        }
+      ?>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
@@ -82,7 +90,7 @@ session_start();
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-dark bg-dark text-light topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -115,57 +123,6 @@ session_start();
             
 <!-- -->
 
-<!-- CONFIRMATION MODIFICATION PASSWORD -->
-<div class="modal fade" id="motdepass" tabindex="-1" role="dialog" aria-labelledby="confirmeModal" raia-hidden="true" >#confirmereinitialeparrain
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Motifier mon profil</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        <form method="POST" action="">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Nom</label>
-                  <input type="hidden" name="id" value="<?php echo 1; ?>" />
-                  <input type="text" readonly value="<?php echo 'MON_NOM'; ?>" class="form-control" name="nom" >
-                </div>
-                <div class="form-group">
-                  <label>Prenom</label>
-                  <input type="text" readonly value="<?php echo 'MON_PRENOM'; ?>" class="form-control" name="prenom" >
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" class="form-control" name="email" value="<?php echo 'MON_MAIL'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Numero telephone</label>
-                  <input type="text" class="form-control" name="numero" value="<?php echo 'MON_NUMERO'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="text" class="form-control" name="password" value="<?php echo 'MON_PASSWORD'; ?>" >
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
-              </div>
-          </form>
-        </div>
-      </div>        
-    </div>
-						<!-- CONFIRMATION MODIFICATION PASSWORD -->
-
-
-<?php
- /* TRAITEMENT */
-
-?>
-
-
 <!-- -->
 
         <!-- End of Topbar -->
@@ -185,34 +142,62 @@ session_start();
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <?php 
+                    $requete = $bd->prepare("SELECT * FROM operation LEFT JOIN compte ON operation.numerocpte = compte.numerocpte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN agence ON operation.idagence = agence.idagence LEFT JOIN modeoperation ON operation.idmodeoperation  = modeoperation.idmodeoperation  LEFT JOIN typecompte ON typecompte.idtypeoperation = operation.idtypeoperation LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE compte.archive = 0");
+                    $requete->execute();
+                  ?>
                   <thead>
                     <tr>
+                      <th style="font-size:12px;">Numéro opération</th>
                       <th style="font-size:12px;">Numéro compte</th>
                       <th style="font-size:12px;">Nom et prenom</th>
-                      <th style="font-size:12px;">Numéro opération</th>
                       <th style="font-size:12px;">Date opération</th>
-                      <th style="font-size:12px;">Numero compte</th>
+                      <th style="font-size:12px;">Type opération</th>
+                      <th style="font-size:12px;">Mode opération</th>
                       <th style="font-size:12px;">Agence</th>
+                      <th style="font-size:12px;">Transaction</th>
+                      <th></th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                   
                     <?php 
-                    if(1==2){
-                    while($donne = $requete ){ ?>
+                    while($donne = $requete->fetch() ){ ?>
                     <tr>
-                      <td style="font-size:13px;"><?php echo $donne['numerocpte'];?></td>
-                      <td style="font-size:13px;"><?php echo $donne['nom'].' '.$donne['prenom'];?></td>
-                      <td style="font-size:13px;"><?php echo $donne['numerooperation'];?></td>
+                      <td style="font-size:13px;"><?php echo $donne['numerooperation'].''.$donne['idopteration']; ?></td>
+                      <td style="font-size:13px;"><?php echo $donne['numerocpte'].''.$donne['idcompte'];?></td>
+                      <td style="font-size:13px;"><?php echo $donne['nomclient'].' '.$donne['prenomclient'];?></td>
                       <td style="font-size:13px;"><?php echo $donne['dateoperation'];?></td>
-                      <td style="font-size:13px;"><?php echo $donne['numerocpte'];?></td>
+                      <?php if($donne['libtypeoperation'] == "Dépôt"){?>
+                      <td style="font-size:13px;" class="text-primary"><?php echo $donne['libtypeoperation'];?></td>
+                      <?php }else{?>
+                        <td style="font-size:13px;" class="text-success"><?php echo $donne['libtypeoperation'];?></td>
+                      <?php }?>
+                      <?php if($donne['libmodeoperation'] == "Espèce"){?>
+                      <td style="font-size:13px;" class="text-primary"><?php echo $donne['libmodeoperation'];?></td>
+                      <?php }else{?>
+                        <td style="font-size:13px;" class="text-success"><?php echo $donne['libmodeoperation'];?></td>
+                      <?php }?>
                       <td style="font-size:13px;"><?php echo $donne['libagence'];?></td>
-                      <td><a class="btn btn-success" style="font-size:13px;" href="rapport.php?Id_etu=<?php echo $donne['	idcompte'];?>">Voir plus </a></td>
+                      <?php if($donne['issueoperation'] == 0){?>
+                      <td style="font-size:13px;" class="text-warning">En cours</td>
+                      <?php }elseif($donne['issueoperation'] == 1){?>
+                        <td style="font-size:13px;" class="text-success">Valider</td>
+                      <?php }else{?>
+                        <td style="font-size:13px;" class="text-danger">Annulée</td>
+                      <?php }?>
+                      <?php if($donne['issueoperation'] == 0 ){?>
+                        <td><a class="btn btn-success" style="font-size:13px;" href="transaction.php?Id_etu=<?php echo $donne['idopteration'];?>">Valider</a></td>
+                      <td><a class="btn btn-danger" style="font-size:13px;" href="annule_transaction.php?Id_etu=<?php echo $donne['idopteration'];?>">Annuler</a></td>
+                      <?php }else{?>
+                        <td></td>
+                        <td></td>
+                      <?php }?>
+                      
                     </tr>
-                    <?php }  }
-                    
-                    
+                    <?php 
+                    } 
                     ?>
                   </tbody>
                 </table>
@@ -227,7 +212,7 @@ session_start();
       <!-- End of Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-dark text-light">
+      <footer class="sticky-footer text-light" style="background:rgb(60,36,139);">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>Copyright &copy; Gestion comptes banques 2021</span>

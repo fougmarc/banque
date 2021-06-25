@@ -2,7 +2,7 @@
 session_start();
 include 'fonction/connexion.php';
 $bd = bd();
-$id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
+$mail = htmlspecialchars($_SESSION['mail']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,58 +33,6 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
             
 <div id="wrapper" class="bg-dark">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-light sidebar sidebar-white accordion" id="accordionSidebar">
-
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">ESPACE CAISSIÈRE</div>
-      </a>
-
-      <hr class="sidebar-divider my-0">
-
-      <!-- Heading -->
-      <div class="sidebar-heading" style="margin:5px auto;">
-        <i class="fas fa-fw fa-login"></i>
-        Mon profil
-      </div>
-      <?php 
-        $requete = $bd->prepare("SELECT * FROM caissiere WHERE emailcaisse = ? ");
-        $requete->execute(array($_SESSION['mail']));
-
-        while($donne = $requete->fetch()){
-      ?>
-      <img src="image/user.png" class="rounded-circle border" alt="image" style="height: 200px; width:200px; margin:10px auto;"/>
-      <!-- Nav Item - Tables -->
-      <label style="margin-left: 20px; font-weight:bold;">
-          Nom :<?php echo $donne['nomcaisse']; ?>
-      </label>
-      <label style="margin-left: 20px; font-weight:bold">
-          Prenom :<?php echo $donne['prenomcaisse']; ?>
-      </label>
-      <label style="margin-left: 20px; font-weight:bold">
-          Email :<?php echo $donne['emailcaisse']; ?>
-      </label>
-      <label style="margin-left: 20px; font-weight:bold">
-          Numero Telephone :<br> <?php echo $donne['numerocaisse']; ?>
-      </label>
-      <?php
-        }
-      ?>
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <hr class="sidebar-divider">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -94,13 +42,15 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
         <nav class="navbar navbar-expand text-light topbar mb-4 static-top shadow" style="background:rgb(60,36,139);">
 
           <!-- Sidebar Toggle (Topbar) -->
+          Bienvenue sur votre espace 
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
-<div class="topbar-divider d-none d-sm-block"></div>
+          
+          <div class="topbar-divider d-none d-sm-block"></div>
 
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
@@ -124,56 +74,6 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
             
 <!-- -->
 
-<!-- CONFIRMATION MODIFICATION PASSWORD -->
-<div class="modal fade" id="motdepass" tabindex="-1" role="dialog" aria-labelledby="confirmeModal" raia-hidden="true" >#confirmereinitialeparrain
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Motifier mon profil</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        <form method="POST" action="">
-          <div class="modal-body">
-              <div class="form-group">
-                  <label>Nom</label>
-                  <input type="hidden" name="id" value="<?php echo 1; ?>" />
-                  <input type="text" readonly value="<?php echo 'MON_NOM'; ?>" class="form-control" name="nom" >
-                </div>
-                <div class="form-group">
-                  <label>Prenom</label>
-                  <input type="text" readonly value="<?php echo 'MON_PRENOM'; ?>" class="form-control" name="prenom" >
-                </div>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" class="form-control" name="email" value="<?php echo 'MON_MAIL'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Numero telephone</label>
-                  <input type="text" class="form-control" name="numero" value="<?php echo 'MON_NUMERO'; ?>" >
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input type="text" class="form-control" name="password" value="<?php echo 'MON_PASSWORD'; ?>" >
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
-              </div>
-          </form>
-        </div>
-      </div>        
-    </div>
-						<!-- CONFIRMATION MODIFICATION PASSWORD -->
-
-
-<?php
- /* TRAITEMENT */
-
-?>
-
 
 <!-- -->
 
@@ -183,63 +83,26 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Bienvenue dans l'espace caissière </h1>
 
-          <!-- DataTales Example -->
-          <?php
-                if (isset($_POST['sauvegarde'])) {
-                  //verification si les données parrains saisies
-                  if (!empty($_POST['dateouverture'])) {
-                    
-                    $dateouverture = htmlspecialchars($_POST['dateouverture']);
-                    $datefermeture = htmlspecialchars($_POST['datefermeture']);
-                    $visaouverture = htmlspecialchars($_POST['visaouverture']);
-                    $visafermeture = htmlspecialchars($_POST['visafermeture']);
-                    $visafermeture = htmlspecialchars($_POST['visafermeture']);
-                    $obscpte = htmlspecialchars($_POST['obscpte']);
-                    $idcompte = intval(htmlspecialchars($_POST['idcompte']));
-
-                            
-                        $modification = $bd->prepare(" UPDATE compte SET dateouverture = ?, datefermeture = ?, visaouverture = ?,visafermeture = ?, obscpte = ? WHERE idcompte = ? ");
-                        $modification->execute(array($dateouverture, $datefermeture, $visaouverture, $visafermeture, $obscpte, $idcompte));
-                        /*-----------------compte------------------*/
-                        if($modification){
-                            $flashalerte = '<div class="alert alert-success"> Modification effectuée avec succès </div>';
-                        }else{
-                            $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
-                        }
-
-                    }else{
-
-                      $flashalerte = '<div class="alert alert-danger"> Erreur de remplissage des champs !!! Tous les champs sont obligatoires </div>';
-                    }
-                }
-                
-                ?>
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Informations comptes <a href="espace_caissiere_liste_comptes.php" class="btn btn-danger text-white" style="float:right;">Retour </a></h6>
+              <h6 class="m-0 font-weight-bold text-primary">Informations comptes </h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
-              <form method="POST" action="">
+              <form method="" action="">
                 <div class="modal-body">
-                <?php
-                    if (isset($flashalerte)) {
-                        echo $flashalerte;
-                        unset($flashalerte); // faire disparaitre le message d'alerte
-                    }
-                    
-                    $requete = $bd->prepare("SELECT * FROM compte LEFT JOIN client ON client.idclient = compte.idclient LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE idcompte = ? ");
-                    $donne = $requete->execute(array($id));
+                <?php 
+                    $requete = $bd->prepare("SELECT * FROM client LEFT JOIN compte ON client.idclient = compte.idclient LEFT JOIN sexe ON sexe.idsexe = client.idsexe WHERE email = ? ");
+                    $donne = $requete->execute(array($mail));
+                
                     while($donnes = $requete->fetch() ){ 
-                ?>
+                    ?>
                     <center><legend>Informations compte</legend></center>
                     <div class="form-group row">
                       <div class="form-group col-6">
                         <label>Numéro de compte</label>
-                        <input type="hidden" name="idcompte" value="<?php echo $id; ?>">
                         <input readonly type="text" class="form-control"  value="<?php echo $donnes['numerocpte'].''.$donnes['idcompte']; ?>" >
                       </div>
                       <div class="form-group col-6">
@@ -251,31 +114,28 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
                     <div class="form-group row">
                       <div class="form-group col-6">
                         <label>Date d'ouverture</label>
-                        <input type="datetime" class="form-control" name="dateouverture" value="<?php echo $donnes['dateouverture']; ?>" >
+                        <input readonly type="datetime" class="form-control"  value="<?php echo $donnes['dateouverture']; ?>" >
                       </div>
                       <div class="form-group col-6">
                         <label>Date de fermeture</label>
-                        <input type="datetime" class="form-control" name="datefermeture" value="<?php echo $donnes['datefermeture']; ?>" >
+                        <input readonly type="datetime" class="form-control"  value="<?php echo $donnes['datefermeture']; ?>" >
                       </div>
                     </div>
                     <div class="form-group row">
                       <div class="form-group col-6">
                         <label>Visa d'ouverture</label>
-                        <input type="text" class="form-control" name="visaouverture" value="<?php echo $donnes['visaouverture']; ?>" >
+                        <input readonly type="text" class="form-control"  value="<?php echo $donnes['visaouverture']; ?>" >
                       </div>
                       <div class="form-group col-6">
                         <label>Visa de fermeture</label>
-                        <input type="text" class="form-control" name="visafermeture" value="<?php echo $donnes['visafermeture']; ?>" >
+                        <input readonly type="text" class="form-control" value="<?php echo $donnes['visafermeture']; ?>" >
                       </div>
                     </div>
                     <div class="form-group row">
                       <div class="form-group col-10">
                         <label>Observations</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" name="obscpte" placeholder="Observations sur le compte ..."><?php echo $donnes['obscpte']; ?></textarea>
+                        <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="2" name="obscpte" placeholder="Observations sur le compte ..."><?php echo $donnes['obscpte']; ?></textarea>
                       </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary" name="sauvegarde">Sauvegarder</button>
                     </div>
                     <hr>
                     <center><legend>Informations client</legend></center>
@@ -324,6 +184,10 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
                         <label>Cni</label>
                         <input readonly type="text" class="form-control"  value="<?php echo $donnes['cni']; ?>" >
                       </div>
+                      <div class="form-group col-6">
+                            <label>Profession</label>
+                            <input readonly type="text" class="form-control" value="<?php echo $donnes['profession'];?>" name="profession" placeholder="Ingenieur, Mécanicien, ..."  >
+                        </div>
                     </div>
 
                     <hr>
@@ -358,10 +222,10 @@ $id = htmlspecialchars(htmlentities($_GET['Id_cpte']));
   </div>
   <!-- End of Page Wrapper -->
 
-  <!-- Scroll to Top Button-->
+  <!-- Scroll to Top Button--> 
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
-  </a>
+  </a>                         
 
   <!-- Logout Modal-->
   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
